@@ -40,6 +40,7 @@ module RiCal
         export_prop_to(export_stream, "CALSCALE", calscale_property)
         export_prop_to(export_stream, "VERSION", version_property)
         export_prop_to(export_stream, "METHOD", method_property)
+        export_prop_to(export_stream, "X-WR-CALNAME", calname_property)
       end
 
       def prodid_property_from_string(line) # :nodoc:

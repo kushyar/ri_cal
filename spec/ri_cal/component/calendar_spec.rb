@@ -53,6 +53,26 @@ describe RiCal::Component::Calendar do
     end
   end
   
+  context "an imported instance with a calname" do
+    before(:each) do
+      @it = RiCal.parse_string("BEGIN:VCALENDAR\nX-WR-CALNAME:Monkey\nEND:VCALENDAR\n").first
+    end
+    
+    it "should have a name of the given calname" do
+      @it.calname.should == "Monkey"
+    end
+    
+    it "should allow setting of the calname" do
+      @it.calname = "Elephant"
+      @it.calname.should == "Elephant"
+      @it.export.should match(%r{\nX-WR-CALNAME:Elephant\n})
+    end
+    
+    it "should export a calname" do
+      @it.export.should match(%r{\nX-WR-CALNAME:Monkey\n})
+    end
+  end
+  
   describe RiCal::Component::Calendar::FoldingStream do
     before(:each) do
       @it = RiCal::Component::Calendar::FoldingStream.new(nil)
