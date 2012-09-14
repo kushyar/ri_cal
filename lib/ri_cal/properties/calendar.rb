@@ -1,6 +1,6 @@
 module RiCal
   module Properties #:nodoc:
-    #- ©2009 Rick DeNatale
+    #- c2009 Rick DeNatale
     #- All rights reserved. Refer to the file README.txt for the license
     #
     # Properties::Calendar provides property accessing methods for the Calendar class
@@ -94,8 +94,34 @@ module RiCal
         @prodid_property = RiCal::PropertyValue::Text.new(self, line)
       end
 
+      # return the the X-WR-CALNAME property
+      # which will be an instances of RiCal::PropertyValueText
+      #
+      # Specifies the name of the calendar.
+      def calname_property
+        @calname_property ||= RiCal::PropertyValue::Text.convert(self, "Untitled")
+      end
 
-      # return the the VERSION property
+      # set the X-WR-CALNAME property
+      # property value should be an instance of RiCal::PropertyValueText
+      def calname_property=(property_value)
+        @calname_property = property_value
+      end
+
+      # set the value of the X-WR-CALNAME property
+      def calname=(ruby_value)
+        self.calname_property= RiCal::PropertyValue::Text.convert(self, ruby_value)
+      end
+
+      def calname
+        calname_property ? calname_property.ruby_value : nil
+      end
+
+      def calname_property_from_string(line) # :nodoc:
+        @calname_property = RiCal::PropertyValue::Text.new(self, line)
+      end
+
+      # returnthe the VERSION property
       # which will be an instances of RiCal::PropertyValueText
       # 
       # [purpose (from RFC 2445)]
@@ -116,12 +142,12 @@ module RiCal
         @version_property = RiCal::PropertyValue::Text.new(self, line)
       end
 
-
       def export_properties_to(export_stream) #:nodoc:
         export_prop_to(export_stream, "CALSCALE", @calscale_property)
         export_prop_to(export_stream, "PRODID", @prodid_property)
         export_prop_to(export_stream, "VERSION", @version_property)
         export_prop_to(export_stream, "METHOD", @method_property)
+        export_prop_to(export_stream, "X-WR-CALNAME", @calname_property)
       end
 
       def ==(o) #:nodoc:
@@ -129,7 +155,8 @@ module RiCal
         (calscale_property == o.calscale_property) &&
         (prodid_property == o.prodid_property) &&
         (version_property == o.version_property) &&
-        (method_property == o.method_property)
+        (method_property == o.method_property) &&
+        (calname_property == o.calname_property)
         else
            super
         end
@@ -141,6 +168,7 @@ module RiCal
         prodid_property = prodid_property && prodid_property.dup
         version_property = version_property && version_property.dup
         method_property = method_property && method_property.dup
+        calname_property = calname_property && calname_property.dup
       end
 
       def add_date_times_to(required_timezones) #:nodoc:
@@ -148,7 +176,7 @@ module RiCal
 
       module ClassMethods #:nodoc:
         def property_parser #:nodoc:
-          {"METHOD"=>:method_property_from_string, "VERSION"=>:version_property_from_string, "PRODID"=>:prodid_property_from_string, "CALSCALE"=>:calscale_property_from_string}
+          {"METHOD"=>:method_property_from_string, "VERSION"=>:version_property_from_string, "PRODID"=>:prodid_property_from_string, "X-WR-CALNAME"=>:calname_property_from_string, "CALSCALE"=>:calscale_property_from_string}
         end
       end
 

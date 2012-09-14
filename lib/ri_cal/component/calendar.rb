@@ -1,6 +1,6 @@
 module RiCal
   class Component
-    #- ©2009 Rick DeNatale, All rights reserved. Refer to the file README.txt for the license
+    #- c2009 Rick DeNatale, All rights reserved. Refer to the file README.txt for the license
     #
     # to see the property accessing methods for this class see the RiCal::Properties::Calendar module
     class Calendar < Component
@@ -40,6 +40,7 @@ module RiCal
         export_prop_to(export_stream, "CALSCALE", calscale_property)
         export_prop_to(export_stream, "VERSION", version_property)
         export_prop_to(export_stream, "METHOD", method_property)
+        export_prop_to(export_stream, "X-WR-CALNAME", calname_property)
       end
 
       def prodid_property_from_string(line) # :nodoc:
